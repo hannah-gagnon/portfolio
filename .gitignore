@@ -3,3 +3,6 @@
 
 # Claude Code local settings (preview server config)
 .claude/
+
+# Full-size source files kept locally (never uploaded)
+_originals/

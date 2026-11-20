@@ -8,8 +8,10 @@ Hosted free on GitHub Pages; the GoDaddy domain points at it via the `CNAME` fil
 - Edit the `.html` files, `css/styles.css` and `js/main.js` directly.
 - **Preview:** run a local server from this folder (e.g. `python3 -m http.server 8000`) and open
   http://localhost:8000. Nothing is public until Hannah pushes to GitHub.
-- **Nav, mobile menu and footer are repeated in every page.** If you change one, change all 7.
+- **Nav, mobile menu and footer are repeated in every page.** If you change one, change all 8.
 - Case study pages live in `projects/`, so their asset paths start with `../`.
+- `styles.css` and `main.js` are linked with `?v=YYYYMMDD` in all 8 pages (cache-busting). Bump it in every page
+  whenever you change CSS/JS, or browsers may mix old styles with new pages.
 - Keep changes small and show Hannah before/after. She's a designer: match the Figma, don't improvise.
 - Before going live, do NOT delete the repo's `CNAME` file.
 
@@ -32,6 +34,7 @@ File: "Portfolio - Fall 2026 Update" (key `BkWIzwFJqK9RQAaofqm03R`)
 | `projects/colab.html` | Case study |
 | `projects/pht.html` | Case study (4 autoplay looping MP4s in Process + Brand system) |
 | `projects/dream-creatives.html` | Case study |
+| `projects/tushy.html` | Misc project page (Tushy assets for Barrel). Linked from the Tushy card on Misc. |
 
 Case study order / "Up next" loop: CO·LAB → Dream Creatives → PHT → CO·LAB.
 Clubhouse Canada (McCormick) case study exists in Figma but is NOT published yet.
@@ -66,16 +69,20 @@ Type classes mirror Figma text styles: `.t-display` (128 Light), `.t-upnext` (96
 - "More projects" expand/collapse on Home (animated height, accessible aria-expanded).
 - Misc tabs (arrow-key support).
 - Full-screen mobile menu (≤760px): hamburger top-right, Esc closes, focus trapped, scroll locked.
-- Hover videos: project cards + "Up next" thumbnail play `assets/videos/hover-*.mp4` (3s loops) on
-  hover/focus. Mouse/trackpad only; skipped with prefers-reduced-motion.
+- Hover flipbooks: project cards + "Up next" thumbnail flip through `data-hover-frames` images every
+  0.40s (`FRAME_INTERVAL`) on hover/focus. Mouse/trackpad only; skipped with prefers-reduced-motion.
+- Flourishes: swapped to inline SVG; a swoop grows ~1.5s after each comes into view; Home's top one
+  (`data-draw`) draws itself in. Smooth scroll (Lenis) + hide-on-scroll glass nav.
 - Hovers: nav underline, text links get thicker sage underline, socials/footer darken, tabs tint.
 
 ## Assets (`assets/`)
 - `images/{home,about,colab,dream-creatives,pht,thumbnails}/` — JPGs, already resized/compressed
   (max 2000px, thumbnails 1000px). Compress anything new the same way before adding.
 - `icons/` — favicon set (Hannah's script "HG" signature) + `flourish-large.svg`, `flourish-small.svg`.
-- `videos/` — `hover-colab.mp4`, `hover-pht.mp4`, `hover-dreamcreatives.mp4`, `hover-clubhouse.mp4`,
-  `pht-iterations.mp4`, `pht-colours.mp4`, `pht-logo-variations.mp4`, `pht-type.mp4`, `colab-homepage-scroll.mp4`.
+- `videos/` — `pht-iterations.mp4`, `pht-colours.mp4`, `pht-logo-variations.mp4`, `pht-type.mp4`, `colab-homepage-scroll.mp4`,
+  `tushy-hero-reel.mp4`, `tushy-brand-grid.mp4`, `tushy-about-page.mp4`.
+- `images/thumbnails/hover/` — project card hover flipbook frames (`<project>-1.jpg` …), listed in each card's `data-hover-frames`.
+- `_originals/` (git-ignored) — full-size source files kept locally, never uploaded.
   Re-encode big videos before adding (no ffmpeg here; macOS `avconvert --preset Preset1920x1080` works).
 
 ## Still to do

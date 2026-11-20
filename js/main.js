@@ -132,22 +132,42 @@
     window.matchMedia('(min-width: 761px)').addEventListener('change', (mq) => { if (mq.matches) closeMenu(false); });
   }
 
-  /* ---------- Hover videos (project cards + Up next) ---------- */
+  /* ---------- Hover flipbooks (project cards + Up next) ----------
+     Elements with data-hover-frames="a.jpg, b.jpg, ..." flip through those images while hovered
+     (or focused), in order, every FRAME_INTERVAL ms, looping. On leave it goes back to the normal
+     thumbnail. Frames load on first hover; a frame is only shown once it has loaded, so there's
+     never a blank flash. Mouse/trackpad only; skipped with prefers-reduced-motion. */
   const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const FRAME_INTERVAL = 400;   // ms per frame
   if (canHover && !reduceMotion) {
-    document.querySelectorAll('[data-hover-video]').forEach((el) => {
-      const video = el.querySelector('video.card__video');
-      if (!video) return;
-      const thumb = video.parentElement;
+    document.querySelectorAll('[data-hover-frames]').forEach((el) => {
+      const overlay = el.querySelector('img.card__frame');
+      if (!overlay) return;
+      const thumb = overlay.parentElement;
+      const srcs = el.dataset.hoverFrames.split(',').map((x) => x.trim()).filter(Boolean);
+      let frames = null;    // preloaded Image objects
+      let timer = null;
+      let i = 0;
+      const show = (n) => {
+        const f = frames[n];
+        if (!f.complete || !f.naturalWidth) return false;   // not loaded yet: keep the current frame
+        overlay.src = f.src;
+        return true;
+      };
       const start = () => {
-        if (!video.src) video.src = video.dataset.src;
-        const p = video.play();
-        if (p) p.then(() => thumb.classList.add('is-playing')).catch(() => {});
+        if (!frames) frames = srcs.map((src) => { const im = new Image(); im.decoding = 'async'; im.src = src; return im; });
+        clearInterval(timer);
+        i = 0;
+        timer = setInterval(() => {
+          const next = (i + 1) % frames.length;
+          if (show(next)) { i = next; thumb.classList.add('is-playing'); }
+        }, FRAME_INTERVAL);
+        const first = () => { if (timer && show(0)) thumb.classList.add('is-playing'); };
+        if (frames[0].complete) first(); else frames[0].addEventListener('load', first, { once: true });
       };
       const stop = () => {
+        clearInterval(timer); timer = null;
         thumb.classList.remove('is-playing');
-        video.pause();
-        setTimeout(() => { if (!thumb.classList.contains('is-playing')) video.currentTime = 0; }, 260);
       };
       el.addEventListener('mouseenter', start);
       el.addEventListener('mouseleave', stop);
