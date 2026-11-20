@@ -242,7 +242,8 @@ main { position: relative; z-index: 1; }
 .empty-state { padding: 64px 0 128px; max-width: 520px; }
 .type-fun { padding: 32px 0 128px; }
 .type-fun .t-caption { color: var(--text-secondary); }
-.type-fun__next { margin-top: 48px; }   /* space between specimens */
+.type-fun__next { margin-top: 48px; }   /* space between specimens; same half-width size as the row above */
+@media (max-width: 760px) { .type-fun__next > div[aria-hidden] { display: none; } }
 
 /* ---------- About page ---------- */
 .about-hero { display: flex; gap: 96px; align-items: flex-end; padding-top: 72px; padding-bottom: 160px; }
