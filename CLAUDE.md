@@ -75,13 +75,14 @@ Type classes mirror Figma text styles: `.t-display` (128 Light), `.t-upnext` (96
   (max 2000px, thumbnails 1000px). Compress anything new the same way before adding.
 - `icons/` — favicon set (Hannah's script "HG" signature) + `flourish-large.svg`, `flourish-small.svg`.
 - `videos/` — `hover-colab.mp4`, `hover-pht.mp4`, `hover-dreamcreatives.mp4`, `hover-clubhouse.mp4`,
-  `pht-iterations.mp4`, `pht-colours.mp4`, `pht-logo-variations.mp4`, `pht-type.mp4`.
+  `pht-iterations.mp4`, `pht-colours.mp4`, `pht-logo-variations.mp4`, `pht-type.mp4`, `colab-homepage-scroll.mp4`.
+  Re-encode big videos before adding (no ffmpeg here; macOS `avconvert --preset Preset1920x1080` works).
 
 ## Still to do
 - [ ] **Resume:** add `assets/resume.pdf` (all Resume links already point there).
       If Hannah asks "did I forget anything?", remind her about the resume.
-- [ ] CO·LAB + Dream Creatives case study videos are blank placeholders (`.media__placeholder`):
-      `colab-homepage-scroll`, `dc-homepage-scrollthrough`, `dc-plans-page`, `dc-gallery-page`.
+- [ ] Dream Creatives case study videos are blank placeholders (`.media__placeholder`):
+      `dc-homepage-scrollthrough`, `dc-plans-page`, `dc-gallery-page`. (CO·LAB's is done.)
       She's redoing these in Figma; swap the placeholder `<div>` for a `<video autoplay muted loop playsinline>`.
 - [ ] Responsive refinement at in-between widths (laptop ~1280, tablet 768–1024), using the "V1 - Mobile" Figma page as reference.
 - [ ] Misc: Tushy / Carepod images, Type Fun + Arts & Crafts content.

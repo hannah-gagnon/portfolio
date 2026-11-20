@@ -105,13 +105,29 @@ main { position: relative; z-index: 1; }
 .flourish--top       { top: 40px; right: 0; transform: translateX(33%); }
 .flourish--mid-left  { left: 0;  transform: translateX(-38%); }
 .flourish--mid-right { right: 0; transform: translateX(35%); }
+/* Per-page desktop position (set inline as --top-desktop) so flourishes sit behind images, not text.
+   Phones keep the plain `top` value. */
+@media (min-width: 761px) {
+  .flourish[style*="--top-desktop"] { top: var(--top-desktop) !important; }
+}
 
 /* ---------- Nav ---------- */
+/* Fixed to the top. Hides on scroll down, comes back on scroll up / when scrolling stops
+   (js/main.js). .page gets matching top padding so the layout doesn't move. */
+.page { --nav-h: 89px; padding-top: var(--nav-h); }
 .nav {
-  position: relative; z-index: 2;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+  height: var(--nav-h);
   display: flex; align-items: center; justify-content: space-between;
-  padding-top: 32px; padding-bottom: 32px;
+  transition: transform 700ms cubic-bezier(.45,.05,.25,1), background-color 400ms ease;
 }
+/* Glass, only once the page has scrolled (top of page looks exactly like the Figma) */
+.nav.is-glass {
+  background: rgba(249, 248, 242, 0.6);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+}
+.nav.is-hidden { transform: translateY(-100%); }
 .nav__links { display: flex; gap: clamp(24px, 4.45vw, 64px); }
 .nav__link { padding: 4px 0; text-underline-offset: 4px; }
 .nav__link[aria-current="page"] { text-decoration: underline; text-decoration-thickness: 1px; }
@@ -139,7 +155,7 @@ main { position: relative; z-index: 1; }
 .text-link { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
 
 /* ---------- Hero (Home / Work / Misc) ---------- */
-.hero { padding-top: 160px; padding-bottom: 96px; display: flex; justify-content: space-between; align-items: flex-start; gap: 48px; }
+.hero { padding-top: 260px; padding-bottom: 96px; display: flex; justify-content: space-between; align-items: flex-start; gap: 48px; }
 .hero__title { max-width: 631px; }
 .hero__right { display: flex; gap: clamp(32px, 8.3vw, 120px); align-items: flex-start; }
 .hero__status { max-width: 300px; white-space: pre-line; }
@@ -212,6 +228,8 @@ main { position: relative; z-index: 1; }
 .tab[aria-selected="true"] { background: var(--bg-subtle); }
 .tab-panel[hidden] { display: none; }
 .empty-state { padding: 64px 0 128px; max-width: 520px; }
+.type-fun { padding: 32px 0 128px; }
+.type-fun .t-caption { color: var(--text-secondary); }
 
 /* ---------- About page ---------- */
 .about-hero { display: flex; gap: 96px; align-items: flex-end; padding-top: 72px; padding-bottom: 160px; }
@@ -240,6 +258,8 @@ main { position: relative; z-index: 1; }
 
 /* ---------- Sections (About + case studies) ---------- */
 .section { padding-top: var(--space-section); display: flex; flex-direction: column; gap: 56px; position: relative; }
+/* Section content sits above the decorative flourish (which is z-index 0 inside the section) */
+.section > :not(.flourish), .section--clock .columns > * { position: relative; z-index: 1; }
 .section--first { padding-top: 140px; }
 .columns { display: flex; justify-content: space-between; align-items: flex-start; gap: 48px; }
 .columns__statement { width: 640px; max-width: 100%; }
@@ -285,7 +305,6 @@ main { position: relative; z-index: 1; }
 }
 .up-next__left { display: flex; flex-direction: column; gap: 20px; }
 .up-next__eyebrow { color: var(--text-secondary); }
-.up-next__cta { margin-top: 0; }
 .up-next__prev { margin-top: 40px; }
 .up-next__media { width: 443px; flex: none; display: block; }
 
@@ -318,7 +337,7 @@ main { position: relative; z-index: 1; }
 }
 
 @media (max-width: 760px) {
-  .nav { padding-top: 24px; padding-bottom: 24px; }
+  .page { --nav-h: 92px; }
   .status-pill { position: relative; top: auto; right: auto; margin: 0 var(--edge); align-self: flex-start; }
   .hero, .hero--stack { padding-top: 64px; padding-bottom: 56px; }
   .hero__right { flex-direction: column; gap: 20px; }
@@ -409,7 +428,7 @@ a, .tab, .more-toggle, .nav__link { transition: color 200ms ease, background-col
 
 @media (hover: hover) and (pointer: fine) {
   .nav__link:hover { text-decoration: underline; text-decoration-thickness: 1px; }
-  .t-logo:hover { font-style: italic; }
+  .t-logo:hover { color: var(--text-secondary); }
 
   .card .card__label span:first-child { text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; text-decoration-thickness: 1px; transition: text-decoration-color 200ms ease; }
   a.card:hover .card__label span:first-child { text-decoration-color: currentColor; }
@@ -418,6 +437,8 @@ a, .tab, .more-toggle, .nav__link { transition: color 200ms ease, background-col
   .footer__nav a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 
   .text-link:hover { text-decoration-color: var(--accent-sage-deep); text-decoration-thickness: 2px; }
+  /* Home "Still curious? Learn more →": just goes lighter, like the logo */
+  .about-preview__copy .text-link:hover { color: var(--text-secondary); text-decoration-color: currentColor; text-decoration-thickness: 1px; }
   .more-toggle:hover { text-decoration-color: var(--accent-sage-deep); }
   .more-toggle:hover .more-toggle__icon { transform: rotate(90deg); }
   .more-toggle__icon { transition: transform 300ms ease; }
@@ -438,7 +459,6 @@ a, .tab, .more-toggle, .nav__link { transition: color 200ms ease, background-col
 .page-case .menu__link[aria-current="page"] { font-style: normal; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 8px; }
 .page-case .cs-header__eyebrow { color: var(--text-secondary); }
 @media (hover: hover) and (pointer: fine) {
-  .page-case .t-logo:hover { font-style: normal; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
   .page-case .up-next a.t-upnext:hover { font-style: normal; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 10px; }
 }
 
@@ -470,4 +490,47 @@ a, .tab, .more-toggle, .nav__link { transition: color 200ms ease, background-col
   .section--clock .columns { display: contents; }
   .section--clock .media { order: -1; width: 100% !important; }
   .section--clock .columns__text { width: 100% !important; }
+}
+
+/* ==========================================================================
+   Smooth scroll (Lenis, set up in js/main.js)
+   ========================================================================== */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* ==========================================================================
+   Flourish swoops. Set up in js/main.js: shortly after a flourish comes into view,
+   a swoop grows off its end, stitch by stitch.
+   ========================================================================== */
+svg.flourish { overflow: visible; }
+.bloom--off { display: none; }
+.bloom__fade { transition: opacity 300ms ease; }
+.bloom__fade.is-faded { opacity: 0; }
+.bloom__stitch {
+  transform-box: fill-box; transform-origin: center;
+  transform: scale(0) rotate(-90deg); opacity: 0;
+  transition: transform 420ms cubic-bezier(.34, 1.5, .64, 1), opacity 220ms ease;
+  transition-delay: calc((var(--n) - var(--i)) * 6ms);
+}
+.is-blooming .bloom__stitch {
+  transform: none; opacity: 1;
+  transition-delay: calc(var(--o, 0ms) + var(--i) * 17ms);
+}
+/* data-draw (Home's top flourish): the whole flourish draws itself in, then the swoop follows */
+.js img.flourish[data-draw] { opacity: 0; }   /* hidden until the script takes over (no flash) */
+.draw__stitch {
+  transform-box: fill-box; transform-origin: center;
+  transform: scale(0) rotate(-90deg); opacity: 0;
+  transition: transform 420ms cubic-bezier(.34, 1.5, .64, 1), opacity 220ms ease;
+}
+.is-drawing .draw__stitch { transform: none; opacity: 1; transition-delay: var(--d, 0ms); }
+.is-drawing .draw__stitch.is-skip { transform: scale(0); opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .js img.flourish[data-draw] { opacity: 1; }
+}
+/* Let the swoops grow past the footer's top edge (sides still clip so the flourish bleeds off-screen) */
+@supports (overflow: clip) {
+  .footer { overflow-x: clip; overflow-y: visible; }
 }
