@@ -8,9 +8,9 @@ Hosted free on GitHub Pages; the GoDaddy domain points at it via the `CNAME` fil
 - Edit the `.html` files, `css/styles.css` and `js/main.js` directly.
 - **Preview:** run a local server from this folder (e.g. `python3 -m http.server 8000`) and open
   http://localhost:8000. Nothing is public until Hannah pushes to GitHub.
-- **Nav, mobile menu and footer are repeated in every page.** If you change one, change all 8.
+- **Nav, mobile menu and footer are repeated in every page.** If you change one, change all 9.
 - Case study pages live in `projects/`, so their asset paths start with `../`.
-- `styles.css` and `main.js` are linked with `?v=YYYYMMDD` in all 8 pages (cache-busting). Bump it in every page
+- `styles.css` and `main.js` are linked with `?v=YYYYMMDD` in all 9 pages (cache-busting). Bump it in every page
   whenever you change CSS/JS, or browsers may mix old styles with new pages.
 - Keep changes small and show Hannah before/after. She's a designer: match the Figma, don't improvise.
 - Before going live, do NOT delete the repo's `CNAME` file.
@@ -35,6 +35,7 @@ File: "Portfolio - Fall 2026 Update" (key `BkWIzwFJqK9RQAaofqm03R`)
 | `projects/pht.html` | Case study (4 autoplay looping MP4s in Process + Brand system) |
 | `projects/dream-creatives.html` | Case study |
 | `projects/tushy.html` | Misc project page (Tushy assets for Barrel). Linked from the Tushy card on Misc. |
+| `projects/carepod.html` | Misc project page (Carepod assets for Barrel), same layout classes as Tushy. Linked from Misc. |
 
 Case study order / "Up next" loop: CO·LAB → Dream Creatives → PHT → CO·LAB.
 Clubhouse Canada (McCormick) case study exists in Figma but is NOT published yet.
@@ -54,9 +55,8 @@ Type classes mirror Figma text styles: `.t-display` (128 Light), `.t-upnext` (96
 `.t-body` (14 sans), `.t-caption` (12 sans), `.t-caption-i` (13 serif italic). Sizes use clamp() for mobile.
 
 ## Rules Hannah has set (important)
-1. **No italics anywhere on case study pages** — text, captions, credits, hovers, or the mobile menu.
-   Case study `<body>` has `class="page-case"`; use non-italic classes there (`.t-company`, `.t-h2`, `.t-caption`).
-   Italics are fine on Home/About/Misc (e.g. "About, designer aside").
+1. **No italics anywhere on the site, except the mobile menu** (its current-page link is italic, keep it).
+   `.t-h3`, `.t-h2i` and `.t-caption-i` are now upright despite their names (Figma called them italic).
 2. **Cross-stitch flourishes must always bleed off the screen edge** at every viewport, never stop short
    with a gap. They're anchored to an edge with `right:0`/`left:0` + `translateX(...)`. Keep it that way.
 3. Case study images use 16:9 containers (`.media__frame`), matching her 1920×1080 assets.
@@ -80,16 +80,20 @@ Type classes mirror Figma text styles: `.t-display` (128 Light), `.t-upnext` (96
   (max 2000px, thumbnails 1000px). Compress anything new the same way before adding.
 - `icons/` — favicon set (Hannah's script "HG" signature) + `flourish-large.svg`, `flourish-small.svg`.
 - `videos/` — `pht-iterations.mp4`, `pht-colours.mp4`, `pht-logo-variations.mp4`, `pht-type.mp4`, `colab-homepage-scroll.mp4`,
-  `tushy-hero-reel.mp4`, `tushy-brand-grid.mp4`, `tushy-about-page.mp4`.
+  `tushy-hero-reel.mp4`, `tushy-brand-grid.mp4`, `tushy-about-page.mp4`,
+  `dc-homepage-scrollthrough.mp4`, `dc-plans-page.mp4`, `dc-gallery-page.mp4` (DC sources live in ~/Documents/Portfolio).
+  `carepod-reel.mp4`, `carepod-module-reel.mp4`, `carepod-laptop-mockup.mp4` (sources: ~/Documents/carepod assets).
 - `images/thumbnails/hover/` — project card hover flipbook frames (`<project>-1.jpg` …), listed in each card's `data-hover-frames`.
 - `_originals/` (git-ignored) — full-size source files kept locally, never uploaded.
   Re-encode big videos before adding (no ffmpeg here; macOS `avconvert --preset Preset1920x1080` works).
 
 ## Still to do
-- [ ] **Resume:** add `assets/resume.pdf` (all Resume links already point there).
-      If Hannah asks "did I forget anything?", remind her about the resume.
-- [ ] Dream Creatives case study videos are blank placeholders (`.media__placeholder`):
-      `dc-homepage-scrollthrough`, `dc-plans-page`, `dc-gallery-page`. (CO·LAB's is done.)
+- [ ] **Resume:** links removed from every page for now (menu, footer, Home hero, About CTA).
+      When `assets/resume.pdf` exists, add "Resume →" back after Instagram in each `.socials` block and
+      in About's "Coffee chat?" links. If Hannah asks "did I forget anything?", remind her about the resume.
+- Social links (LinkedIn/Instagram) live in: Home hero, About, footer and the mobile menu. Removed from the
+  Work and Misc page heads on purpose.
+- [x] Case study videos: all placeholders now filled (CO·LAB + Dream Creatives).
       She's redoing these in Figma; swap the placeholder `<div>` for a `<video autoplay muted loop playsinline>`.
 - [ ] Responsive refinement at in-between widths (laptop ~1280, tablet 768–1024), using the "V1 - Mobile" Figma page as reference.
 - [ ] Misc: Tushy / Carepod images, Type Fun + Arts & Crafts content.

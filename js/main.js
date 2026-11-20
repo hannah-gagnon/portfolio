@@ -312,8 +312,21 @@
     });
   }
 
-  /* ---------- Autoplay videos: respect reduced motion ---------- */
-  if (reduceMotion) {
-    document.querySelectorAll('video[autoplay]').forEach((v) => { v.removeAttribute('autoplay'); v.pause(); });
+  /* ---------- Page videos: play only once scrolled into view ----------
+     Videos keep `autoplay` in the HTML (so they still play if this script fails), but here we hold
+     each one at its first frame until VIDEO_IN_VIEW of it is on screen, then play from the start.
+     They pause when scrolled away and carry on when you come back. Skipped entirely (stay paused)
+     with prefers-reduced-motion. */
+  const VIDEO_IN_VIEW = 0.35;   // fraction of the video that must be visible before it starts
+  const pageVideos = document.querySelectorAll('video[autoplay]');
+  pageVideos.forEach((v) => { v.removeAttribute('autoplay'); v.autoplay = false; v.pause(); v.currentTime = 0; });
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    const videoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(({ target: v, isIntersecting }) => {
+        if (isIntersecting) { const p = v.play(); if (p) p.catch(() => {}); }
+        else v.pause();
+      });
+    }, { threshold: VIDEO_IN_VIEW });
+    pageVideos.forEach((v) => videoObserver.observe(v));
   }
 })();
