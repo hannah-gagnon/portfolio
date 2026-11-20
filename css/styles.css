@@ -159,6 +159,8 @@ main { position: relative; z-index: 1; }
 .hero__title { max-width: 631px; }
 .hero__right { display: flex; gap: clamp(32px, 8.3vw, 120px); align-items: flex-start; }
 .hero__status { max-width: 300px; white-space: pre-line; }
+/* Home hero (desktop): right column sits on the heading's bottom line, clear of the flourish */
+@media (min-width: 1101px) { .hero:not(.hero--stack), .hero__right { align-items: flex-end; } }
 .hero--stack { flex-direction: column; justify-content: flex-start; gap: 20px; padding-top: 140px; padding-bottom: 48px; }   /* Work + Misc: title only, so a tighter gap to the content */
 
 /* ---------- Project grid + cards ---------- */
